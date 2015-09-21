@@ -4,15 +4,27 @@ If you run "make glider", you can see a small example of running
 the glider pattern for a few generations.
 
 0.  How much time did you spend on this pre-class exercise, and when?
+    I'd say like 20 minutes, I looked at it before class and now I'm editing it after class. 
 
 1.  What are one or two points that you found least clear in the
     9/15 slide decks (including the narration)?
+    It would be cool to introduce Game of Life as a canonical sort of example.    
 
 2.  In the basic implementation provided, what size board for the Game
     of Life would fit in L3 cache for one of the totient nodes?  Add a
     timer to the code and run on the totient node.  How many cells per
     second can we update for a board that fits in L3 cache?  For a
     board that does not fit?
+    
+    Assuming a dense board and byte-wise storage of on and off states and an L3 cache size of say, K bytes,
+    We can fit a board that is root k by root k. 
+    
+    The next question is a bit more open, as it completely depends on the data structure, your optimizations, etc etc.
+    I'd say that with the same sort of vectorization and blocking, you can hit roughly the same rate as a 
+    constant times matrix multiple :) 
+    
+    If the board doesn't fit this is a load balancing question, and lies more in the 
+    realm of combinatorial optimzation.
 
 3.  Assuming that we want to advance time by several generations,
     suggest a blocking strategy that would improve the operational
@@ -20,11 +32,17 @@ the glider pattern for a few generations.
     not dilute, so that we must still consider every cell.  You may
     want to try your hand at implementing your strategy (though you
     need not spend too much time on it).
+    
+    Block with ghost cells a la particle simulation, keeping in mind that error propagates. 
 
 4.  Comment on what would be required to parallelize this code
     according to the domain decomposition strategy outlined in the
     slides.  Do you think you would see good speedups on one of
     the totient nodes?  Why or why not?
+    
+    You'd cut up the domain into p subdomains (p = #processors), use some nice sparser data structures, 
+    and load balance as best you could. Yes, but possible with a lot of effort developing
+    communication avoiding algorithms + tuning code
 
 5.  Suppose we want to compute long-range interactions between two
     sets of particles in parallel using the obvious n^2 algorithm in a
@@ -49,3 +67,5 @@ the glider pattern for a few generations.
     Based on what you know about memories and parallel architecture,
     do you see any features of this approach that are likely to lead
     to poor performance?
+    
+    It only matters if particles are next to each other, so there's no need to do two nested loops :)

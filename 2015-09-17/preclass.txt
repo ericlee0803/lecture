@@ -6,8 +6,16 @@ that you can figure out the numerical jargon.
 
 0.  How much time did you spend on this pre-class exercise, and when?
 
+    15 minutes ish (most of it was review) before, typing it up after
+
 1.  What are one or two points that you found least clear in the
     9/17 slide decks (including the narration)?
+    
+    I think it would be helpful to explain a bit more about how the differential equations
+    were discretized for the non-math oriented individuals (funny story, in Demmel's class
+    there was this one securities guy who could not get his head around finite element methods
+    and got really frustrated with the entire discretization thing, three people tried to help him
+    and in the end he stormed out of the classroom)
 
 2.  Fill in the most straightforward implementation you can think of
     for multiplying a compressed sparse row matrix by a vector.
@@ -21,10 +29,16 @@ that you can figure out the numerical jargon.
           int* ptr; /* Offsets of the start of each row in pr
                        (ptr[n] = number of nonzeros) */
       } csr_t;
-    
+
       void sparse_multiply(csr_t* A, double* x, double* result)
       {
-          /* Fill in here */
+          for(int i = 0; i < sizeof(ptr); i ++){
+            int start = ptr[i];
+            int end = ptr[i+1];
+            for(int j = start; j < end; j ++){
+                C[ptr] + = pr[j] * result[col[j]];
+                
+                **end stuff
       } 
 
 3.  From the slides, complete the following short code:
@@ -61,3 +75,6 @@ that you can figure out the numerical jargon.
     several steps without communicating, can you describe how to
     similarly advance this scheme?  Are there any advantages to such
     an organization if there is only one core available?
+    
+    You can do implicit discreziation. I'd also suggest using the analytic solution, 
+    but I guess that would be cheating :) 

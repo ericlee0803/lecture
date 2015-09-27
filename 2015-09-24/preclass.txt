@@ -1,7 +1,13 @@
 0.  How much time did you spend on this pre-class exercise, and when?
 
+I was sick, so I did this one completely afterwards in about 30 minutes. 
+
 1.  What are one or two points that you found least clear in the
     9/24 slide decks (including the narration)?
+    
+The difference between using a single thread and a master thread could be clarified a bit more, 
+in that there was no mention of why'd you use one over another. I liked the tree traversal example
+but I thought having more in depth discussion about how it would work would be nice. 
 
 2.  The omp_mc.c file in the demo subdirectory runs a Monte Carlo
     simulation to estimate the expected value of a uniform random
@@ -12,6 +18,8 @@
        terms of the number of trials (N), number of processors (p),
        time per trial (t_trial), and time to update the global
        counters in the critical section (t_update).
+       
+       I believe it would be the same i.e. N*t_trial + p*t_update
 
     b) Run the code with a few different parameter values in order
        to estimate N, t_trial, and t_update for this code on
@@ -26,3 +34,17 @@
     performance and correctness) in OpenMP codes.  Go through the
     checklist in the paper for omp_mc.c.  What performance mistakes
     are there in the demonstration implementation?
+    
+    I don't think it's necessary to have the seed generation in an omp critical section, as it's a private variable 
+    so you don't need to worry about synchronization. You also don't need that section where you have a single processor 
+    get the number of threads, as you've already set it so it can totally be a private variable. 
+   
+    Also, removing the critical section from inside thread_main() is probably for the best. Moving the update 
+    outside thread_main() and replacing the critical section w/atomics should speed things up. In fact, I'd suggest 
+    making the same optimization as before, and having an array of results with a single-threaded reduce operation
+    to finish.
+    
+    I suppose that the pointed-to paper suggests doing a flush after reading shared variables, but if one is either 
+    only reading them or updating them atomically, I don't think that's necessary. 
+    
+    
